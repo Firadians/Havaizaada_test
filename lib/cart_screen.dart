@@ -6,6 +6,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 250, 225, 235),
       appBar: AppBar(title: Text("Shopping Cart")),
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
@@ -38,6 +39,8 @@ class CartScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.builder(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
                       final item = cartItems[index];
@@ -47,38 +50,114 @@ class CartScreen extends StatelessWidget {
                               (1 - product['discountPercentage'] / 100))
                           .toStringAsFixed(2);
 
-                      return ListTile(
-                        leading: Image.network(product['thumbnail']),
-                        title: Text(product['title']),
-                        subtitle: Text("\$${discountedPrice} x$quantity"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
                           children: [
-                            IconButton(
-                              icon: Icon(Icons.remove),
-                              onPressed: () {
-                                if (quantity > 1) {
-                                  // Update the cart quantity by decreasing it
-                                  context.read<ProductBloc>().add(
-                                        RemoveFromCart(product),
-                                      );
-                                } else {
-                                  // Remove the product from cart if quantity reaches 0
-                                  context.read<ProductBloc>().add(
-                                        UpdateCartQuantity(product, 0),
-                                      );
-                                }
-                              },
+                            // Product Image
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                product['thumbnail'],
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            Text("$quantity"),
-                            IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                // Update the cart quantity by increasing it
-                                context.read<ProductBloc>().add(
-                                      AddToCart(product),
-                                    );
-                              },
+                            SizedBox(width: 12),
+                            // Product Details
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product['title'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    product['brand'],
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "₹${product['price']}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        "₹${discountedPrice}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "${product['discountPercentage']}% OFF",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            // Quantity Controls
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.remove),
+                                  onPressed: () {
+                                    if (quantity > 1) {
+                                      // Update the cart quantity by decreasing it
+                                      context.read<ProductBloc>().add(
+                                            RemoveFromCart(product),
+                                          );
+                                    } else {
+                                      // Remove the product from cart if quantity reaches 0
+                                      context.read<ProductBloc>().add(
+                                            UpdateCartQuantity(product, 0),
+                                          );
+                                    }
+                                  },
+                                ),
+                                Text("$quantity"),
+                                IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () {
+                                    // Update the cart quantity by increasing it
+                                    context.read<ProductBloc>().add(
+                                          AddToCart(product),
+                                        );
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),

@@ -84,7 +84,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
-                childAspectRatio: 0.75,
+                childAspectRatio: 0.7,
               ),
               itemCount: state.products.length,
               itemBuilder: (context, index) {
@@ -145,23 +145,66 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Title text
                             Text(
                               product['title'],
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                               maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              overflow:
+                                  TextOverflow.ellipsis, // Prevent overflow
                             ),
                             SizedBox(height: 4),
+
+                            // Brand text
                             Text(
-                              "₹$discountedPrice",
+                              product['brand'],
                               style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
+                                fontSize: 12,
+                                color: Colors.grey[600],
                               ),
+                              maxLines: 1,
+                              overflow:
+                                  TextOverflow.ellipsis, // Prevent overflow
+                            ),
+                            SizedBox(height: 2),
+
+                            // Price and Discount Row
+                            Row(
+                              children: [
+                                // Original price
+                                Flexible(
+                                  child: Text(
+                                    "₹${product['price']}",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      decoration: TextDecoration.lineThrough,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow
+                                        .ellipsis, // Prevent overflow
+                                  ),
+                                ),
+                                SizedBox(width: 4),
+
+                                // Discounted price
+                                Flexible(
+                                  child: Text(
+                                    "₹${discountedPrice}",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow
+                                        .ellipsis, // Prevent overflow
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
